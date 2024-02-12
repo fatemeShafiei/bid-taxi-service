@@ -1,0 +1,26 @@
+{
+  "name": "bid-taxi-service",
+  "version": "1.0.0",
+  "description": "A taxi app with bidding: Riders propose prices, fleets bid, for efficient and cost-effective rides.",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest --watchAll --verbose",
+    "swagger-autogen": "node ./app/doc/swagger.js",
+    "serve": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "Fateme Shafiei",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mongoose": "^6.11.1",
+    "swagger-ui-express": "^5.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.3",
+    "supertest": "^6.3.4",
+    "swagger-autogen": "^2.23.7"
+  }
+}
