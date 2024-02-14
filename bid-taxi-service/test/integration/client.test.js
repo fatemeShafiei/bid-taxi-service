@@ -9,11 +9,12 @@ let server;
 describe('/api/clients', () => {
 
 
-    beforeEach(() => {
+    beforeEach(async () => {
         server = require('../../server');
+        await Client.remove({});
     });
 
-    afterEach( async() => {
+    afterEach(async () => {
         server.close();
         await Client.remove({});
     });
@@ -37,12 +38,23 @@ describe('/api/clients', () => {
 
             expect(res.status).toBe(200);
             expect(res.body.length).toBe(1);
-            expect(res.body.)
+            expect(res.body.some(g => g.name === "Swift Transits")).toBeTruthy();
+            expect(res.body.some(g => g.email === 'swift.transits@gmail.com')).toBeTruthy();
 
 
         })
     });
+    describe('GET /:id', () => {
+        it('should return not fount if invalid id is passed', async () => {
 
+            const INVALID_CLIENT_ID = '65cbf2c1282c28d92a34b27a';
+            const res = await request(server).get('/api/clients/' + INVALID_CLIENT_ID);
+
+            expect(res.status).toBe(404);
+            expect(res.body.message).toContain(INVALID_CLIENT_ID);
+        });
+
+    });
 
 });
 

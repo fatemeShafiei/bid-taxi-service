@@ -67,6 +67,7 @@ exports.findById = (req, res) => {
       else res.send(data);
     })
     .catch(err => {
+      console.log(err)
       res
         .status(500)
         .send({ message: "Error retrieving client with id=" + id });

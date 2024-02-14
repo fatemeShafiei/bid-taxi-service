@@ -12,15 +12,16 @@
   "author": "Fateme Shafiei",
   "license": "MIT",
   "dependencies": {
+    "config": "^3.3.11",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "mongoose": "^6.11.1",
-    "swagger-ui-express": "^5.0.0"
+    "swagger-ui-express": "^5.0.0",
+    "swagger-autogen": "^2.23.7"
   },
   "devDependencies": {
     "jest": "^29.7.0",
     "nodemon": "^3.0.3",
-    "supertest": "^6.3.4",
-    "swagger-autogen": "^2.23.7"
+    "supertest": "^6.3.4"
   }
 }
