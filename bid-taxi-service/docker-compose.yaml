@@ -1,12 +1,15 @@
 version: '3.3'
 services:
-  login-app:
+  bid-taxi-service:
     container_name: bid-taxi-service
-    image: latest/bid-taxi-service
+    image: bid-taxi-service:latest
+    environment:
+      - PORT=3030
+      - NODE_ENV=default
     restart: always
     build: .
     ports:
-      - "3000:3000"
+      - "3030:3030"
     links:
       - mongo
   mongo:
@@ -15,11 +18,8 @@ services:
     logging:
       options:
         max-size: 1g
-    environment:
-       MONGO_INITDB_ROOT_USERNAME: admin
-       MONGO_INITDB_ROOT_PASSWORD: admin
     image: mongo
     volumes:
       - ./data:/data/db
     ports:
-      - '27018:27017'
+      - '27017:27017'
