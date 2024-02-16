@@ -9,11 +9,10 @@ exports.create = (req, res) => {
     // #swagger.description = 'Some description...'
 
   if (!req.body.pickupLocation || !req.body.dropoffLocation || !req.body.proposedPrice) {
-    res.status(400).send({ message: "Please ensure that the pickupLocation, dropoffLocation and proposedPrice fields are not left empty." });
-    return;
+    return res.status(400).send({ message: "Please ensure that the pickupLocation, dropoffLocation and proposedPrice fields are not left empty." });
   }
 
-  const clientId = req.query.clientId;
+  const clientId = req.params.id;
 
   const ride = new Ride({
     pickupLocation: req.body.pickupLocation,

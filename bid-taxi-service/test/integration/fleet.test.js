@@ -1,31 +1,31 @@
 const request = require('supertest');
 const db = require("../../app/model");
-const Client = db.client;
+const Fleet = db.fleet;
 const mongoose = require('mongoose');
 
 
 let server;
 
 
-describe('/api/clients', () => {
+describe('/api/fleets', () => {
 
 
     beforeEach(async () => {
         server = require('../../server');
-        await Client.remove({});
+        await Fleet.remove({});
     });
 
     afterEach(async () => {
         server.close();
-        await Client.remove({});
+        await Fleet.remove({});
     });
 
 
     describe('GET /', () => {
 
-        it('should return all clinets', async () => {
+        it('should return all fleets', async () => {
 
-            const clients = [
+            const fleets = [
                 {
                     name: "Swift Transits",
                     email: "swift.transits@gmail.com",
@@ -33,9 +33,9 @@ describe('/api/clients', () => {
                 }
             ];
 
-            await Client.collection.insertMany(clients);
+            await Fleet.collection.insertMany(fleets);
 
-            const res = await request(server).get('/api/clients');
+            const res = await request(server).get('/api/fleets');
 
             expect(res.status).toBe(200);
             expect(res.body.length).toBe(1);
@@ -48,47 +48,47 @@ describe('/api/clients', () => {
     describe('GET /:id', () => {
         it('should return not fount if invalid id is passed', async () => {
 
-            const INVALID_CLIENT_ID = mongoose.Types.ObjectId();
-            const res = await request(server).get('/api/clients/' + INVALID_CLIENT_ID);
+            const INVALID_FLEET_ID = mongoose.Types.ObjectId();
+            const res = await request(server).get('/api/fleets/' + INVALID_FLEET_ID);
 
             expect(res.status).toBe(404);
-            expect(res.body.message).toContain(INVALID_CLIENT_ID.toString());
+            expect(res.body.message).toContain(INVALID_FLEET_ID.toString());
         });
-        it('should return a client if valid id is passed', async () => {
-            const client = new Client({
+        it('should return a fleet if valid id is passed', async () => {
+            const fleet = new Fleet({
                 name: "Emily",
                 email: "emily@gmail.com",
                 phone: "+1234007890"
             });
-            await client.save();
+            await fleet.save();
 
-            const res = await request(server).get('/api/clients/' + client._id);
+            const res = await request(server).get('/api/fleets/' + fleet._id);
 
             expect(res.status).toBe(200);
-            expect(res.body).toHaveProperty('name', client.name);
+            expect(res.body).toHaveProperty('name', fleet.name);
         });
 
     });
     describe('POST /', () => {
 
-        let newClient;
+        let newFleet;
 
         const exec = async () => {
             return await request(server)
-                .post('/api/clients')
-                .send(newClient);
+                .post('/api/fleets')
+                .send(newFleet);
         }
 
         beforeEach(() => {
-            newClient = {
+            newFleet = {
                 name: "John",
                 email: "john@gmail.com",
                 phone: "+1234007890"
             };
         })
 
-        it('should return 400 if client name is empty', async () => {
-            newClient = {
+        it('should return 400 if fleet name is empty', async () => {
+            newFleet = {
                 name: "",
                 email: "john@gmail.com",
                 phone: "+1234007890"
@@ -98,8 +98,8 @@ describe('/api/clients', () => {
 
             expect(res.status).toBe(400);
         });
-        it('should return 400 if client phone is empty', async () => {
-            newClient = {
+        it('should return 400 if fleet phone is empty', async () => {
+            newFleet = {
                 name: "John",
                 email: "john@gmail.com",
                 phone: ""
@@ -109,8 +109,8 @@ describe('/api/clients', () => {
 
             expect(res.status).toBe(400);
         });
-        it('should return 400 if client email is empty', async () => {
-            newClient = {
+        it('should return 400 if fleet email is empty', async () => {
+            newFleet = {
                 name: "John",
                 email: "",
                 phone: "+1234007890"
@@ -122,7 +122,7 @@ describe('/api/clients', () => {
         });
 
 
-        it('should return the client id if it is valid', async () => {
+        it('should return the fleet id if it is valid', async () => {
             const res = await exec();
 
             expect(res.body).toHaveProperty("id");
@@ -130,35 +130,35 @@ describe('/api/clients', () => {
     });
 
     describe('PUT /:id', () => {
-        let newClient;
-        let client;
+        let newFleet;
+        let fleet;
         let id;
 
         const exec = async () => {
             return await request(server)
-                .put('/api/clients/' + id)
-                .send(newClient);
+                .put('/api/fleets/' + id)
+                .send(newFleet);
         }
 
         beforeEach(async () => {
 
-            client = new Client({
+            fleet = new Fleet({
                 name: "John",
                 email: "john@gmail.com",
                 phone: "+1234007890"
             });
-            await client.save();
+            await fleet.save();
 
-            id = client._id;
-            newClient = {
+            id = fleet._id;
+            newFleet = {
                 name: "Emily",
                 email: "emily@gmail.com",
                 phone: "+1234007890"
             };
         })
 
-        it('should return 400 if new client is empty', async () => {
-            newClient = {};
+        it('should return 400 if new fleet is empty', async () => {
+            newFleet = {};
 
             const res = await exec();
 
@@ -174,7 +174,7 @@ describe('/api/clients', () => {
             expect(res.status).toBe(400);
         });
 
-        it('should return 404 if client with the given id was not found', async () => {
+        it('should return 404 if fleet with the given id was not found', async () => {
             id = mongoose.Types.ObjectId();
 
             const res = await exec();
@@ -182,34 +182,34 @@ describe('/api/clients', () => {
             expect(res.status).toBe(404);
         });
 
-        it('should update the client if input is valid', async () => {
+        it('should update the fleet if input is valid', async () => {
             await exec();
 
-            const updatedClient = await Client.findById(client._id);
+            const updatedFleet = await Fleet.findById(fleet._id);
 
-            expect(updatedClient.name).toBe(newClient.name);
+            expect(updatedFleet.name).toBe(newFleet.name);
         });
     });
 
     describe('DELETE /:id', () => {
-        let client;
+        let fleet;
         let id;
 
         const exec = async () => {
             return await request(server)
-                .delete('/api/clients/' + id)
+                .delete('/api/fleets/' + id)
                 .send();
         }
 
         beforeEach(async () => {
-            client = new Client({
+            fleet = new Fleet({
                 name: "John",
                 email: "john@gmail.com",
                 phone: "+1234007890"
             });
-            await client.save();
+            await fleet.save();
 
-            id = client._id;
+            id = fleet._id;
         })
 
         it('should return 404 if id is invalid', async () => {
@@ -220,7 +220,7 @@ describe('/api/clients', () => {
             expect(res.status).toBe(400);
         });
 
-        it('should return 404 if no client with the given id was found', async () => {
+        it('should return 404 if no fleet with the given id was found', async () => {
             id = mongoose.Types.ObjectId();
 
             const res = await exec();
@@ -228,12 +228,12 @@ describe('/api/clients', () => {
             expect(res.status).toBe(404);
         });
 
-        it('should delete the client if input is valid', async () => {
+        it('should delete the fleet if input is valid', async () => {
             await exec();
 
-            const clientDB = await Client.findById(id);
+            const fleetDB = await Fleet.findById(id);
 
-            expect(clientDB).toBeNull();
+            expect(fleetDB).toBeNull();
         });
 
     });
