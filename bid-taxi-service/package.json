@@ -4,10 +4,10 @@
   "description": "A taxi app with bidding: Riders propose prices, fleets bid, for efficient and cost-effective rides.",
   "main": "server.js",
   "scripts": {
-    "test": "jest --watchAll --verbose",
+    "test": "node ./app/doc/swagger.js && jest --watchAll --verbose --maxWorkers=1",
     "swagger-autogen": "node ./app/doc/swagger.js",
-    "serve": "node server.js",
-    "dev": "nodemon server.js"
+    "serve": "node ./app/doc/swagger.js && node server.js",
+    "dev": "node ./app/doc/swagger.js && nodemon server.js"
   },
   "author": "Fateme Shafiei",
   "license": "MIT",

@@ -1,5 +1,7 @@
 const db = require("../model");
 const Fleet = db.fleet;
+const {isEmpty} = require('../shared/commonMethods');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 
 exports.create = (req, res) => {
@@ -57,7 +59,11 @@ exports.findById = (req, res) => {
    // #swagger.tags = ['Fleets']
 
   const id = req.params.id;
-
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: "The client with the given ID was not found."
+    });
+  }
   Fleet.findById(id)
     .then(data => {
       if (!data)
@@ -76,13 +82,19 @@ exports.update = (req, res) => {
 
    // #swagger.tags = ['Fleets']
 
-  if (!req.body) {
+  if (isEmpty(req.body)) {
     return res.status(400).send({
       message: "Data to update can not be empty!"
     });
   }
 
   const id = req.params.id;
+
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: "The client with the given ID was not found."
+    });
+  }
 
   Fleet.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then(data => {
@@ -105,6 +117,12 @@ exports.delete = (req, res) => {
    // #swagger.tags = ['Fleets']
 
   const id = req.params.id;
+
+  if (!ObjectId.isValid(id)) {
+    return res.status(400).send({
+      message: "The client with the given ID was not found."
+    });
+  }
 
   Fleet.findByIdAndRemove(id, { useFindAndModify: false })
     .then(data => {

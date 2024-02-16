@@ -3,9 +3,9 @@ module.exports = app => {
 
   var router = require("express").Router();
 
-  router.post("/api/bids", bid.create);
+  router.post("/api/fleets/:fleetId/rides/:rideId/bids", bid.create);
 
-  router.post("/api/bids/approve", bid.approve);
+  router.put("/api/rides/:rideId/bids/:bidId/approve", bid.approve);
 
    app.use("/", router);
 
