@@ -16,28 +16,60 @@ Before proceeding, ensure you have the following installed:
    cd bid-taxi-service
    ```
 
-## Usage
-1. Run the application with Docker Compose:
+## Run the application
+### Database
+- Run the bellow command for database:
    ```
    docker-compose up --build
    ```
-   This command will build the Docker image and start the application containers.
+### Run the application in production
+- Run the bellow command:
+   
+   ```
+   docker run  -p 3000:3000 -e NODE_ENV=prod --network=bid-taxi-service-network --name bid-taxi-service bid-taxi-service
+   ```
+### Run the application in Develop
 
-2. Access the application:
+- To set the environment:
+
+  - In Linux and Mac run:
+   ```
+      export NODE_ENV=dev
+   ```
+   - In windows run:
+   ```
+      set NODE_ENV=dev
+   ```
+- Run the bellow commands:
+   ```
+      npm install
+   ```
+   ```
+      npm start
+   ```
+### Run the tests
+- To set the environment:
+
+   - In Linux and Mac run:
+   ```
+      export NODE_ENV=test
+   ```
+   - In windows run:
+   ```
+      set NODE_ENV=test
+   ```
+- Run the bellow commands:
+   ```
+   npm install
+   ```
+   ```
+   npm run test
+   ```
+
+## Access the application:
    - The Swagger UI for API documentation is available at `http://localhost:3000/api-docs`.
 
-3. Interact with the service:
    - Use the provided API endpoints to interact with the service as needed.
-
-4. Stop the application:
-   ```
-   docker-compose down
-   ```
-   This command will stop and remove the containers created by Docker Compose.
-
-## Configuration
-- The application configuration can be modified via environment variables in the `docker-compose.yml` file.
-- Ensure any necessary environment-specific configurations are set before running the application.
 
 ## Contributing
 Contributions to this project are welcome! Feel free to submit bug reports, feature requests, or pull requests to help improve this service.
