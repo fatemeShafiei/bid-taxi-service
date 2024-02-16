@@ -1,6 +1,6 @@
 const db = require("../model");
 const Ride = db.ride;
-const Bid = db.bid;
+const ObjectId = require('mongoose').Types.ObjectId;
 
 exports.create = async (req, res) => {
 
@@ -9,27 +9,23 @@ exports.create = async (req, res) => {
   try {
 
     if (!req.body.bidAmount) {
-      res.status(400).send({ message: "Please ensure that the bidAmount is not left empty." });
-      return;
+      return res.status(400).send({ message: "Please ensure that the bidAmount is not left empty." });
     }
 
-    const fleetId = req.query.fleetId;
-    const rideId = req.query.rideId;
+    const fleetId = req.params.fleetId;
+    const rideId =  req.params.rideId;
 
     let ride = await Ride.findById(rideId);
 
     if (!ride) {
-      res.status(404).send({ message: "Not found ride with id: " + rideId });
-      return;
+      return res.status(404).send({ message: "Not found ride with id: " + rideId });
     }
 
     if (ride.state === 'closed') {
-      res.status(400).send({ message: `The bidding process for this ride has ended. Clients are no longer able to accept bids for this ${rideId} ride.` });
-      return;
+      return res.status(400).send({ message: `The bidding process for this ride has ended. Clients are no longer able to accept bids for this ${rideId} ride.` });
     }
 
     ride.bids.push({ bidAmount: req.body.bidAmount, fleetId: fleetId });
-
     ride = await ride.save();
 
     res.send(ride);
@@ -50,24 +46,22 @@ exports.approve = async (req, res) => {
 
     // #swagger.tags = ['Bids']
 
+
   try {
+    const rideId = req.params.rideId;
+    const bidId = req.params.bidId;
 
-    const numbers = [1, 2];
-
-
-    const rideId = req.query.rideId;
-    const bidId = req.query.bidId;
-
+    if (!ObjectId.isValid(rideId) || !ObjectId.isValid(bidId)) {
+      return res.status(404).send({ message: "Not found ride with id: " + rideId });
+    }
     let ride = await Ride.findById(rideId);
 
     if (!ride) {
-      res.status(404).send({ message: "Not found ride with id: " + rideId });
-      return;
+      return res.status(404).send({ message: "Not found ride with id: " + rideId });
     }
 
     if (ride.state === 'closed') {
-      res.status(400).send({ message: `The bid for this ride has already been approved. You are no longer able to approve bids for this ${rideId} ride.` });
-      return;
+      return res.status(400).send({ message: `The bid for this ride has already been approved. You are no longer able to approve bids for this ${rideId} ride.` });
     }
 
     ride.bids.forEach(bid => bid.state = 'declined');
